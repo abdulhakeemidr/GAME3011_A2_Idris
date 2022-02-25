@@ -77,7 +77,6 @@ public class CombinationController : MonoBehaviour
 
     void Update()
     {
-        combinationText.text = guessedValue.ToString();
 
         // enables/disables combination interaction
         if(isCurrent == true)
@@ -92,8 +91,6 @@ public class CombinationController : MonoBehaviour
             downArrowBttn.enabled = isCurrent;
             combinationTxtBttn.enabled = isCurrent;
         }
-
-
 
         if(Input.GetKeyDown(KeyCode.Space) && isCurrent == true)
         {
@@ -135,6 +132,8 @@ public class CombinationController : MonoBehaviour
         {
             guessedValue = MIN;
         }
+        
+        combinationText.text = guessedValue.ToString();
     }
 
     void DownArrowPress()
@@ -144,5 +143,8 @@ public class CombinationController : MonoBehaviour
         {
             guessedValue = MAX;
         }
+        
+        combinationText.text = guessedValue.ToString();
     }
+
 }

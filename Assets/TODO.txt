@@ -1,7 +1,3 @@
-- Set up timer for each combination disabled
-- End of timer resets previous combination
-- Timer is based of difficulty
-- difficulty affects number of combinations appearing
 - Player skill affects timer
 - Complete Design Doc and how to play instructions
 - Set up interactable objects that represent lockpick with various difficulties
