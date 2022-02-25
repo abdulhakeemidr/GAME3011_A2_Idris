@@ -170,6 +170,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b61d5de7ef73854d926d9e1e33f17c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  upArrowBttn: {fileID: 0}
+  downArrowBttn: {fileID: 0}
+  combinationText: {fileID: 0}
+  onCorrectGuess:
+    m_PersistentCalls:
+      m_Calls: []
+  guessedValue: 0
+  randomizedValue: 0
 --- !u!1 &4856512497528055484
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -460,7 +468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

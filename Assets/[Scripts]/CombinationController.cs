@@ -6,24 +6,34 @@ using UnityEngine.Events;
 
 public class CombinationController : MonoBehaviour
 {
+    // the min/max values available in combination
+    const int MIN = 0;
+    const int MAX = 9;
+    
+    
     [SerializeField]
     GameObject upArrowBttn;
     [SerializeField]
     GameObject downArrowBttn;
     [SerializeField]
     GameObject combinationText;
+    [SerializeField]
+    Image combinationImg;
 
     public delegate void GuessAction();
     //public static event GuessAction onCorrectGuess;
     public UnityEvent onCorrectGuess;
     [SerializeField]
-    int guessedValue = 0;
+    int guessedValue = MIN;
     [SerializeField]
-    int randomizedValue = 0;
+    int randomizedValue = MIN;
+
 
     void Start()
     {
-        randomizedValue = Random.Range(1, 10);
+        combinationImg = GetComponent<Image>();
+
+        randomizedValue = Random.Range(MIN + 1, MAX + 1);
         Transform[] allchildren = GetComponentsInChildren<Transform>();
 
         foreach(Transform t in allchildren)
@@ -52,14 +62,31 @@ public class CombinationController : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            if(guessedValue == randomizedValue)
+            onValueComparison();
+        }
+    }
+
+    void onValueComparison()
+    {
+        // get the distance away from it in percentages
+        Debug.Log(Mathf.InverseLerp(MIN, MAX, guessedValue));
+
+        var guessValPercent = Mathf.InverseLerp(MIN, MAX, guessedValue);
+        var correctValPercent = Mathf.InverseLerp(MIN, MAX, randomizedValue);
+
+        float colorChange = Mathf.Abs(guessValPercent - correctValPercent);
+        
+        var originalColor = combinationImg.color;
+        Color finalColor = new Color(colorChange, originalColor.g, colorChange, originalColor.a);
+        combinationImg.color = finalColor;
+        
+        if(guessedValue == randomizedValue)
+        {
+            this.gameObject.SetActive(false);
+            if(onCorrectGuess != null)
             {
-                this.gameObject.SetActive(false);
-                if(onCorrectGuess != null)
-                {
-                    //onCorrectGuess();
-                    //onCorrectGuess.Invoke();
-                }
+                //onCorrectGuess();
+                //onCorrectGuess.Invoke();
             }
         }
     }
@@ -67,18 +94,18 @@ public class CombinationController : MonoBehaviour
     void UpArrowPress()
     {
         guessedValue++;
-        if(guessedValue > 9)
+        if(guessedValue > MAX)
         {
-            guessedValue = 0;
+            guessedValue = MIN;
         }
     }
 
     void DownArrowPress()
     {
         guessedValue--;
-        if(guessedValue < 0)
+        if(guessedValue < MIN)
         {
-            guessedValue = 9;
+            guessedValue = MAX;
         }
     }
 }
