@@ -1,4 +1,6 @@
 - Player skill affects timer
 - Complete Design Doc and how to play instructions
 - Set up interactable objects that represent lockpick with various difficulties
+- Show feedback on timer with UI
+- Show feedback of guessed result with UI
 - Shows unlocked feedback once all combinations are unlocked
