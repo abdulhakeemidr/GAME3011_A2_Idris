@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,68 +10,103 @@ public class CombinationController : MonoBehaviour
     // the min/max values available in combination
     const int MIN = 0;
     const int MAX = 9;
+
+    public bool isCurrent = false;
     
     
     [SerializeField]
-    GameObject upArrowBttn;
+    Button upArrowBttn;
     [SerializeField]
-    GameObject downArrowBttn;
+    Button downArrowBttn;
     [SerializeField]
-    GameObject combinationText;
+    public Text combinationText;
     [SerializeField]
-    Image combinationImg;
+    public Button combinationTxtBttn;
+    [SerializeField]
+    public Image combinationImg;
 
     public delegate void GuessAction();
     //public static event GuessAction onCorrectGuess;
-    public UnityEvent onCorrectGuess;
+    //public static UnityEvent<CombinationController> onCorrectGuess;
+    public static event Action<CombinationController> onCorrectGuess;
     [SerializeField]
-    int guessedValue = MIN;
+    public int guessedValue = MIN;
     [SerializeField]
-    int randomizedValue = MIN;
+    public int randomizedValue = MIN;
 
-
-    void Start()
+    void Awake() 
     {
+        isCurrent = false;
         combinationImg = GetComponent<Image>();
 
-        randomizedValue = Random.Range(MIN + 1, MAX + 1);
         Transform[] allchildren = GetComponentsInChildren<Transform>();
 
         foreach(Transform t in allchildren)
         {
             if(t.gameObject.name == "UpArrow")
             {
-                upArrowBttn = t.gameObject;
+                upArrowBttn = t.gameObject.GetComponent<Button>();
             }
             else if(t.gameObject.name == "DownArrow")
             {
-                downArrowBttn = t.gameObject;
+                downArrowBttn = t.gameObject.GetComponent<Button>();
             }
             else if(t.gameObject.name == "CombinationTxt")
             {
-                combinationText = t.gameObject;
+                combinationText = t.gameObject.GetComponent<Text>();
+                combinationTxtBttn = t.gameObject.GetComponent<Button>();
             }
         }
+    }
 
-        upArrowBttn.GetComponent<Button>().onClick.AddListener(UpArrowPress);
-        downArrowBttn.GetComponent<Button>().onClick.AddListener(DownArrowPress);
+    void Start()
+    {
+        //randomizedValue = Random.Range(MIN, MAX + 1);
+        randomizedValue = 0;
+        upArrowBttn.onClick.AddListener(UpArrowPress);
+        downArrowBttn.onClick.AddListener(DownArrowPress);
+        combinationTxtBttn.onClick.AddListener(onValueComparison);
+
+        if(isCurrent == false)
+        {
+            upArrowBttn.enabled = false;
+            downArrowBttn.enabled = false;
+            combinationTxtBttn.enabled = false;
+        }
     }
 
     void Update()
     {
-        combinationText.GetComponent<Text>().text = guessedValue.ToString();
+        combinationText.text = guessedValue.ToString();
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        // enables/disables combination interaction
+        if(isCurrent == true)
+        {
+            upArrowBttn.enabled = isCurrent;
+            downArrowBttn.enabled = isCurrent;
+            combinationTxtBttn.enabled = isCurrent;
+        }
+        else if(isCurrent == false)
+        {
+            upArrowBttn.enabled = isCurrent;
+            downArrowBttn.enabled = isCurrent;
+            combinationTxtBttn.enabled = isCurrent;
+        }
+
+
+
+        if(Input.GetKeyDown(KeyCode.Space) && isCurrent == true)
         {
             onValueComparison();
+            //combinationTxtBttn.onClick.Invoke();
         }
     }
 
     void onValueComparison()
     {
-        // get the distance away from it in percentages
-        Debug.Log(Mathf.InverseLerp(MIN, MAX, guessedValue));
+        //Debug.Log(Mathf.InverseLerp(MIN, MAX, guessedValue));
 
+        // get the distance away from it in percentages
         var guessValPercent = Mathf.InverseLerp(MIN, MAX, guessedValue);
         var correctValPercent = Mathf.InverseLerp(MIN, MAX, randomizedValue);
 
@@ -79,16 +115,17 @@ public class CombinationController : MonoBehaviour
         var originalColor = combinationImg.color;
         Color finalColor = new Color(colorChange, originalColor.g, colorChange, originalColor.a);
         combinationImg.color = finalColor;
+        Debug.Log("combination tested");
         
-        if(guessedValue == randomizedValue)
-        {
-            this.gameObject.SetActive(false);
-            if(onCorrectGuess != null)
-            {
-                //onCorrectGuess();
-                //onCorrectGuess.Invoke();
-            }
-        }
+        // if(guessedValue == randomizedValue)
+        // {
+        //     combinationImg.color = Color.white;
+        //     //onCorrectGuess?.Invoke(this, EventArgs.Empty);
+        //     if(onCorrectGuess != null)
+        //     {
+        //         onCorrectGuess(this);
+        //     }
+        // }
     }
 
     void UpArrowPress()

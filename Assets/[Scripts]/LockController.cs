@@ -12,15 +12,19 @@ public class LockController : MonoBehaviour
     [SerializeField]
     GameObject combinationPrefab;
     [SerializeField]
-    List<GameObject> combinations;
-    GameObject lockPickObj;
+    float timeTillComboReset;
+    [SerializeField]
+    List<CombinationController> combinations;
 
 
     int numCombinations;
+    int currentCombinationIndex = 0;
 
     void Awake()
     {
         parent = transform.parent.gameObject;
+        //CombinationController.onCorrectGuess.AddListener(onCombinationUnlock);
+        //CombinationController.onCorrectGuess += onCombinationUnlock;
     }
 
     void Start()
@@ -32,10 +36,18 @@ public class LockController : MonoBehaviour
         for(int i = 0; i < numCombinations; i++)
         {
             GameObject newObj = Instantiate(combinationPrefab, this.transform);
-            combinations.Add(newObj);
+            var newCombination = newObj.GetComponent<CombinationController>();
+            newCombination.combinationTxtBttn.onClick.AddListener(onCombinationUnlock);
+            combinations.Add(newCombination);
         }
 
-        //sizeFitter.enabled = false;
+        var currentCombination = combinations[currentCombinationIndex];
+        currentCombination.isCurrent = true;
+        // resets new current combination to white
+        currentCombination.combinationImg.color = Color.white;
+
+        currentCombination.combinationText.color = Color.red;
+        currentCombination.combinationText.fontStyle = FontStyle.Bold;
     }
 
     void DifficultySetting()
@@ -49,8 +61,31 @@ public class LockController : MonoBehaviour
                 numCombinations = 3;
                 break;
             case Difficulty.HARD:
-                numCombinations = 3;
+                numCombinations = 4;
                 break;
         }
+    }
+
+    void onCombinationUnlock()
+    {
+        var currentCombination = combinations[currentCombinationIndex];
+        
+        if(currentCombination.guessedValue != currentCombination.randomizedValue) return;
+        if(sizeFitter.enabled == true) sizeFitter.enabled = false;
+        
+        Debug.Log("Unlocked combination " + currentCombinationIndex);
+        currentCombination.gameObject.SetActive(false);
+        
+        //sender.gameObject.SetActive(false);
+
+        currentCombinationIndex++;
+
+        currentCombination = combinations[currentCombinationIndex];
+        // resets new current combination to white
+        currentCombination.combinationImg.color = Color.white;
+
+        currentCombination.combinationText.color = Color.red;
+        currentCombination.combinationText.fontStyle = FontStyle.Bold;
+        currentCombination.isCurrent = true;
     }
 }

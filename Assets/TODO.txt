@@ -1,9 +1,5 @@
-- Set only the left-most combination interactable
-- Maintain combination positions when each disables (disable content size fitter at right time)
 - Set up timer for each combination disabled
 - End of timer resets previous combination
-- Lockpick image moves right for each combination unlocked
-- Lockpick image moves left for each combination relocked (by timer)
 - Timer is based of difficulty
 - difficulty affects number of combinations appearing
 - Player skill affects timer
