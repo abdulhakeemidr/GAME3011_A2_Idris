@@ -83,7 +83,7 @@ public class LockController : MonoBehaviour
             onCombinationRelock();
         }
 
-        if(currentCombinationIndex > 0)
+        if(currentCombinationIndex > 0 && currentCombinationIndex < combinations.Count)
         {
             TimeCounter();
         }
@@ -101,12 +101,16 @@ public class LockController : MonoBehaviour
 
         Debug.Log("Unlocked combination " + currentCombinationIndex);
         currentCombination.gameObject.SetActive(false);
+        UIManager.instance.UpdateFeedbackText("Unlocked combination " + 
+                                            (currentCombinationIndex + 1));
         
-        //sender.gameObject.SetActive(false);
-
         currentCombinationIndex++;
         
-        if(currentCombinationIndex >= combinations.Count) return;
+        if(currentCombinationIndex >= combinations.Count)
+        {
+            UIManager.instance.ShowResultText();
+            return;
+        }
 
         currentCombination = combinations[currentCombinationIndex];
         currentCombination.isCurrent = true;
@@ -116,9 +120,10 @@ public class LockController : MonoBehaviour
         currentCombination.combinationText.color = Color.red;
         currentCombination.combinationText.fontStyle = FontStyle.Bold;
 
-
         // Reset timer
         SECOND = timeTillComboReset;
+
+        UIManager.instance.UpdateHintText("Unlock the combination before combination resets");
     }
 
     void onCombinationRelock()
@@ -148,6 +153,15 @@ public class LockController : MonoBehaviour
         currentCombination.combinationImg.color = Color.white;
         currentCombination.combinationText.color = Color.red;
         currentCombination.combinationText.fontStyle = FontStyle.Normal;
+
+        UIManager.instance.UpdateFeedbackText("Combination " +
+                                            (currentCombinationIndex + 1) +
+                                            " relocked");
+        
+        if(currentCombinationIndex == 0)
+        {
+            UIManager.instance.UpdateHintText("Click on your number to guess combination number");
+        }
     }
     
     void TimeCounter()
@@ -166,5 +180,7 @@ public class LockController : MonoBehaviour
         {
             timeCounter += Time.deltaTime;
         }
+
+        UIManager.instance.UpdateTimerText(SECOND);
     }
 }

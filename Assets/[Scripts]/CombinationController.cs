@@ -77,7 +77,6 @@ public class CombinationController : MonoBehaviour
 
     void Update()
     {
-
         // enables/disables combination interaction
         if(isCurrent == true)
         {
@@ -101,6 +100,7 @@ public class CombinationController : MonoBehaviour
 
     void onValueComparison()
     {
+        if(isCurrent == false) return;
         //Debug.Log(Mathf.InverseLerp(MIN, MAX, guessedValue));
 
         // get the distance away from it in percentages
@@ -113,6 +113,8 @@ public class CombinationController : MonoBehaviour
         Color finalColor = new Color(colorChange, originalColor.g, colorChange, originalColor.a);
         combinationImg.color = finalColor;
         Debug.Log("combination tested");
+
+        //UIManager.instance.UpdateFeedbackText("Invalid number");
         
         // if(guessedValue == randomizedValue)
         // {
