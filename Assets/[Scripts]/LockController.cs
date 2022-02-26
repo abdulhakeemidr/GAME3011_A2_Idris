@@ -7,13 +7,12 @@ public class LockController : MonoBehaviour
 {
     ContentSizeFitter sizeFitter;
     public Difficulty difficultyState = Difficulty.EASY;
-    GameObject parent;
 
     [SerializeField]
     GameObject combinationPrefab;
 
     [SerializeField]
-    int timeTillComboReset = 10;
+    public int timeTillComboReset = 10;
     float timeCounter;
     [SerializeField]
     int SECOND;
@@ -28,9 +27,12 @@ public class LockController : MonoBehaviour
 
     void Awake()
     {
-        parent = transform.parent.gameObject;
-        //CombinationController.onCorrectGuess.AddListener(onCombinationUnlock);
-        //CombinationController.onCorrectGuess += onCombinationUnlock;
+        Debug.Log("Combination set created");
+    }
+
+    void OnDestroy() 
+    {
+        Debug.Log("Combination set destroyed");
     }
 
     void Start()
@@ -64,14 +66,17 @@ public class LockController : MonoBehaviour
             case Difficulty.EASY:
                 numCombinations = 3;
                 timeTillComboReset = 10;
+                LockUIManager.instance.SetDifficultyText("EASY");
                 break;
             case Difficulty.MEDIUM:
                 numCombinations = 4;
                 timeTillComboReset = 7;
+                LockUIManager.instance.SetDifficultyText("MEDIUM");
                 break;
             case Difficulty.HARD:
                 numCombinations = 5;
                 timeTillComboReset = 5;
+                LockUIManager.instance.SetDifficultyText("HARD");
                 break;
         }
     }
@@ -101,14 +106,14 @@ public class LockController : MonoBehaviour
 
         Debug.Log("Unlocked combination " + currentCombinationIndex);
         currentCombination.gameObject.SetActive(false);
-        UIManager.instance.UpdateFeedbackText("Unlocked combination " + 
+        LockUIManager.instance.UpdateFeedbackText("Unlocked combination " + 
                                             (currentCombinationIndex + 1));
         
         currentCombinationIndex++;
         
         if(currentCombinationIndex >= combinations.Count)
         {
-            UIManager.instance.ShowResultText();
+            LockUIManager.instance.ShowResultText();
             return;
         }
 
@@ -123,7 +128,7 @@ public class LockController : MonoBehaviour
         // Reset timer
         SECOND = timeTillComboReset;
 
-        UIManager.instance.UpdateHintText("Unlock the combination before combination resets");
+        LockUIManager.instance.UpdateHintText("Unlock the combination before combination resets");
     }
 
     void onCombinationRelock()
@@ -152,15 +157,15 @@ public class LockController : MonoBehaviour
         currentCombination.isCurrent = true;
         currentCombination.combinationImg.color = Color.white;
         currentCombination.combinationText.color = Color.red;
-        currentCombination.combinationText.fontStyle = FontStyle.Normal;
+        currentCombination.combinationText.fontStyle = FontStyle.Bold;
 
-        UIManager.instance.UpdateFeedbackText("Combination " +
+        LockUIManager.instance.UpdateFeedbackText("Combination " +
                                             (currentCombinationIndex + 1) +
                                             " relocked");
         
         if(currentCombinationIndex == 0)
         {
-            UIManager.instance.UpdateHintText("Click on your number to guess combination number");
+            LockUIManager.instance.UpdateHintText("Click on your number to guess combination number");
         }
     }
     
@@ -181,6 +186,6 @@ public class LockController : MonoBehaviour
             timeCounter += Time.deltaTime;
         }
 
-        UIManager.instance.UpdateTimerText(SECOND);
+        LockUIManager.instance.UpdateTimerText(SECOND);
     }
 }

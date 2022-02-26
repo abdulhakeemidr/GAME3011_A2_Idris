@@ -8,3 +8,10 @@ public enum Difficulty
     MEDIUM,
     HARD
 }
+
+public enum SkillLevel
+{
+    BEGINNER,
+    INTERMEDIATE,
+    MASTER
+}

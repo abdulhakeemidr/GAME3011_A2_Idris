@@ -25,10 +25,10 @@ public class CombinationController : MonoBehaviour
     [SerializeField]
     public Image combinationImg;
 
-    public delegate void GuessAction();
+    //public delegate void GuessAction();
     //public static event GuessAction onCorrectGuess;
     //public static UnityEvent<CombinationController> onCorrectGuess;
-    public static event Action<CombinationController> onCorrectGuess;
+    //public static event Action<CombinationController> onCorrectGuess;
     [SerializeField]
     public int guessedValue = MIN;
     [SerializeField]
