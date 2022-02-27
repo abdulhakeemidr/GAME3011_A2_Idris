@@ -12,7 +12,7 @@ public class LockController : MonoBehaviour
     GameObject combinationPrefab;
 
     [SerializeField]
-    public int timeTillComboReset = 10;
+    public static int timeTillComboReset = 10;
     float timeCounter;
     [SerializeField]
     int SECOND;
@@ -50,13 +50,7 @@ public class LockController : MonoBehaviour
             combinations.Add(newCombination);
         }
 
-        var currentCombination = combinations[currentCombinationIndex];
-        currentCombination.isCurrent = true;
-        // resets new current combination to white
-        currentCombination.combinationImg.color = Color.white;
-
-        currentCombination.combinationText.color = Color.red;
-        currentCombination.combinationText.fontStyle = FontStyle.Bold;
+        ResetCurrentCombination();
     }
 
     void DifficultySetting()
@@ -103,7 +97,6 @@ public class LockController : MonoBehaviour
         // disable size fitter to maintain combination position in grid
         if(sizeFitter.enabled == true) sizeFitter.enabled = false;
         
-
         Debug.Log("Unlocked combination " + currentCombinationIndex);
         currentCombination.gameObject.SetActive(false);
         LockUIManager.instance.UpdateFeedbackText("Unlocked combination " + 
@@ -117,13 +110,7 @@ public class LockController : MonoBehaviour
             return;
         }
 
-        currentCombination = combinations[currentCombinationIndex];
-        currentCombination.isCurrent = true;
-        // resets new current combination to white
-        currentCombination.combinationImg.color = Color.white;
-
-        currentCombination.combinationText.color = Color.red;
-        currentCombination.combinationText.fontStyle = FontStyle.Bold;
+        ResetCurrentCombination();
 
         // Reset timer
         SECOND = timeTillComboReset;
@@ -151,13 +138,7 @@ public class LockController : MonoBehaviour
 
         currentCombinationIndex--;
 
-        currentCombination = combinations[currentCombinationIndex];
-        currentCombination.gameObject.SetActive(true);
-
-        currentCombination.isCurrent = true;
-        currentCombination.combinationImg.color = Color.white;
-        currentCombination.combinationText.color = Color.red;
-        currentCombination.combinationText.fontStyle = FontStyle.Bold;
+        ResetCurrentCombination();
 
         LockUIManager.instance.UpdateFeedbackText("Combination " +
                                             (currentCombinationIndex + 1) +
@@ -167,6 +148,17 @@ public class LockController : MonoBehaviour
         {
             LockUIManager.instance.UpdateHintText("Click on your number to guess combination number");
         }
+    }
+
+    void ResetCurrentCombination()
+    {
+        var currentCombination = combinations[currentCombinationIndex];
+        currentCombination.gameObject.SetActive(true);
+
+        currentCombination.isCurrent = true;
+        currentCombination.combinationImg.color = Color.white;
+        currentCombination.combinationText.color = Color.red;
+        currentCombination.combinationText.fontStyle = FontStyle.Bold;
     }
     
     void TimeCounter()

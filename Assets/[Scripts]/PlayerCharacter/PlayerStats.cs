@@ -13,17 +13,37 @@ public class PlayerStats : MonoBehaviour
     GameObject lockPickCanvasInst;
 
     string skillLevelTxt = "";
+    [SerializeField]
     int timerIncrease = 0;
 
+    GameObject TriggerTxtObj;
+    Text playerSkillTxt;
+
+    bool inRedBox = false;
+    bool inYellowBox = false;
+    bool inGreenBox = false;
     void Start()
     {
         playerCamControl = GetComponentInChildren<CameraController>();
         SetSkillLevel();
 
+        for(int i = 0; i < UICanvas.transform.childCount; i++)
+        {
+            if(UICanvas.transform.GetChild(i).gameObject.name == "PlayerSkillTxt")
+            {
+                var childObj = UICanvas.transform.GetChild(i).gameObject;
+                playerSkillTxt = childObj.GetComponent<Text>();
+            }
+            else if(UICanvas.transform.GetChild(i).gameObject.name == "TriggerTxt")
+            {
+                var childObj = UICanvas.transform.GetChild(i).gameObject;
+                TriggerTxtObj = childObj;
+            }
+        }
         //UICanvas = GameObject.FindObjectOfType<Canvas>().gameObject;
-        Text playerSkillTxt = UICanvas.transform.GetChild(0).GetComponent<Text>();
         playerSkillTxt.text = skillLevelTxt;
 
+        TriggerTxtObj.SetActive(false);
         //lockPickCanvasInst = LockUIManager.instance.canvasParentPrefab.gameObject;
         lockPickCanvasInst.SetActive(false);
     }
@@ -49,20 +69,78 @@ public class PlayerStats : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
+        if(Input.GetKeyDown(KeyCode.P) && inRedBox)
         {
-            //lockPickCanvasInst = Instantiate(lockPickCanvasPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            lockPickCanvasInst.SetActive(true);
-            var lockController = LockUIManager.instance.lockControllerObj.GetComponent<LockController>();
-            lockController.timeTillComboReset += timerIncrease;
-            lockController.difficultyState = Difficulty.MEDIUM;
-
-            playerCamControl.enabled = false;
+            InstantiateCombinationUI(Difficulty.HARD);
+        }
+        if(Input.GetKeyDown(KeyCode.P) && inYellowBox)
+        {
+            InstantiateCombinationUI(Difficulty.MEDIUM);
+        }
+        if(Input.GetKeyDown(KeyCode.P) && inGreenBox)
+        {
+            InstantiateCombinationUI(Difficulty.EASY);
         }
 
         if(lockPickCanvasInst.activeSelf == false)
         {
             playerCamControl.enabled = true;
+        }
+    }
+
+    void InstantiateCombinationUI(Difficulty setting)
+    {
+        lockPickCanvasInst.SetActive(true);
+        var lockController = LockUIManager.instance.lockControllerObj.GetComponent<LockController>();
+        lockController.difficultyState = setting; //Difficulty.MEDIUM;
+        LockController.timeTillComboReset = LockController.timeTillComboReset + timerIncrease;
+        playerCamControl.enabled = false;
+
+        TriggerTxtObj.SetActive(false);
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    void OnTriggerEnter(Collider other) 
+    {
+        TriggerTxtObj.SetActive(true);
+        if(other.gameObject.CompareTag("RedBox"))
+        {
+            Debug.Log("Red Trigger");
+            inRedBox = true;
+        }
+        
+        if(other.gameObject.CompareTag("YellowBox"))
+        {
+            Debug.Log("Yellow Trigger");
+            inYellowBox = true;
+        }
+        
+        if(other.gameObject.CompareTag("GreenBox"))
+        {
+            Debug.Log("Green Trigger");
+            inGreenBox = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other) 
+    {
+        TriggerTxtObj.SetActive(false);
+        if(other.gameObject.CompareTag("RedBox"))
+        {
+            Debug.Log("Red Trigger Exit");
+            inRedBox = false;
+        }
+        
+        if(other.gameObject.CompareTag("YellowBox"))
+        {
+            Debug.Log("Yellow Trigger Exit");
+            inYellowBox = false;
+        }
+        
+        if(other.gameObject.CompareTag("GreenBox"))
+        {
+            Debug.Log("Green Trigger Exit");
+            inGreenBox = false;
         }
     }
 }
