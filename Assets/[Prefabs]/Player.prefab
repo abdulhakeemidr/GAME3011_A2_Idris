@@ -244,7 +244,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSkill: 0
-  lockPickCanvasPrefab: {fileID: 6117540180950581069, guid: 2de8ef2e7f62d974f92be9aad8c0f070, type: 3}
+  UICanvas: {fileID: 0}
+  lockPickCanvasInst: {fileID: 0}
+  timerIncrease: 0
 --- !u!1 &6994650653904358746
 GameObject:
   m_ObjectHideFlags: 0
