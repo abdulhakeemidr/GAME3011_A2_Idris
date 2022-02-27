@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,8 +60,7 @@ public class CombinationController : MonoBehaviour
 
     void Start()
     {
-        //randomizedValue = Random.Range(MIN, MAX + 1);
-        randomizedValue = 0;
+        randomizedValue = Random.Range(MIN, MAX + 1);
         upArrowBttn.onClick.AddListener(UpArrowPress);
         downArrowBttn.onClick.AddListener(DownArrowPress);
         combinationTxtBttn.onClick.AddListener(onValueComparison);

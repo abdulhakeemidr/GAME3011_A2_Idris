@@ -69,6 +69,10 @@ public class LockUIManager : MonoBehaviour
     void OnEnable() 
     {
         InstantiateCombinationSet();
+        HintTxt.text = "Click on your number to guess combination number";
+        resultTxt.gameObject.SetActive(false);
+        FeedbackTxt.text = "";
+        TimerTxt.text = "0";
     }
 
     void OnDisable() 
@@ -90,8 +94,6 @@ public class LockUIManager : MonoBehaviour
 
     void Start()
     {
-        resultTxt.gameObject.SetActive(false);
-        HintTxt.text = "Click on your number to guess combination number";
         DifficultyTxt.text = "EASY";
     }
 

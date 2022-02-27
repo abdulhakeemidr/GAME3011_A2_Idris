@@ -69,6 +69,11 @@ public class PlayerStats : MonoBehaviour
 
     void Update()
     {
+        if(inRedBox || inGreenBox || inYellowBox)
+        {
+            TriggerTxtObj.SetActive(true);
+        }
+
         if(Input.GetKeyDown(KeyCode.P) && inRedBox)
         {
             InstantiateCombinationUI(Difficulty.HARD);
@@ -102,7 +107,6 @@ public class PlayerStats : MonoBehaviour
 
     void OnTriggerEnter(Collider other) 
     {
-        TriggerTxtObj.SetActive(true);
         if(other.gameObject.CompareTag("RedBox"))
         {
             Debug.Log("Red Trigger");
